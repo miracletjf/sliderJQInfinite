@@ -19,11 +19,12 @@ $buttons.on('click',function(){
   let index = $this.index();
   let x = index*(-800);
   $slierBox.css({'transform': 'translateX('+x+'px)'})
-              .addClass('active')
-              .siblings('.active').removeClass('active'); 
+  $buttons.eq(index).addClass('active')
+          .siblings('.active').removeClass('active'); 
   n = index;
 })
-
+//在第一次执行前，给第一个button添加选中样式
+$buttons.eq(0).addClass('active');
 //开启自动播放
 autoSlide(2500);
 

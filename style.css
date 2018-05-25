@@ -7,6 +7,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  background: #222020;
 }
 .slider-wrap {
   display: block;
@@ -14,7 +15,7 @@ body {
 }
 .slider-window {
   overflow: hidden;    
-  box-shadow: 0 1px 8px #333; 
+  box-shadow: 0 0 18px 0px rgba(255, 255, 255, 0.30);
 }
 .slider-box {
   display: flex;
@@ -33,6 +34,9 @@ body {
   font-size: 18px;
   line-height: 32px;
   text-align: center;    
-  color: #f44;
+  color: #ff9393;
   cursor: pointer;
+}
+.buttons-box span.active {
+  color: #57a4ff;
 }
