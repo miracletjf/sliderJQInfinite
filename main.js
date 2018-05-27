@@ -1,4 +1,4 @@
-(function(){
+$(function(){
   let $wrap = $('.slider-wrap');
   let $images = $('.slider-box img');
   let $btnLeft = $('#btn_left');
@@ -107,5 +107,7 @@
       }
     })
   }
+})
 
-})()
+
+
