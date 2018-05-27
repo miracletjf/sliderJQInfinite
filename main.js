@@ -14,7 +14,7 @@ $(function(){
 
   //初始化
   function init(){
-    $images.eq(0).addClass('current')
+    $images.eq(0).addClass('current up-leave')
     .siblings().addClass('enter');
     $images.eq($images.length-1).removeClass('enter').addClass('leave');
   }
