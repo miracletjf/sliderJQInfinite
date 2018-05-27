@@ -1,41 +1,104 @@
-let $slierBox = $('.slider-box');
-let $buttons = $('.buttons-box span');
 let $wrap = $('.slider-wrap');
+let $images = $('.slider-box img');
+let $btnLeft = $('#btn_left');
+let $btnRight = $('#btn_right');
+let run = false;
 let n = 0;
-let setTimer;
+let timer;
 
-//定义自动播放函数
-const autoSlide = time => {
-  setTimer = setInterval(()=>{
-    n++;
-    n = n%$buttons.length;
-    $buttons.eq(n).trigger('click');
-  },time);
+init();
+
+autoSlide();
+
+//监听鼠标移入，移出事件
+$wrap.on('mouseenter',function(){
+  clearInterval(timer);
+})
+$wrap.on('mouseleave',function(){
+  autoSlide();
+})
+
+//监听按钮点击
+$btnLeft.on('click',function(){
+  if(!run){
+    slideToLeft();
+    run = true;
+  }
+})
+
+$btnRight.on('click',function(){
+  if(!run){
+    slideToRight();
+    run = true;
+  }
+})
+//初始化
+function init(){
+  $images.eq(0).addClass('current')
+  .siblings().addClass('enter');
+}
+//自动滚动
+function autoSlide(){
+  timer = setInterval(()=>{
+    slideToRight();
+  },3000)
+}
+//向右移动
+function slideToRight(){
+  makeNextAll(n)
+  makePrevious(n)
+  makeCurrent(n+1).one('transitionend',() => run = false)
+  n++;
+}
+//向左移动 
+function slideToLeft(){
+  makePreviousAll(n)
+  makeNext(n,'left')
+  makeCurrent(n-1).one('transitionend',() => run = false)
+  n--;
+}
+//控制 下标
+function limitIndex(n){
+  if(n<0){
+    n = n+4;
+  }
+  return n%4;
+}
+//状态机 Previous
+function makePrevious(index,type){
+  let node = $images.eq(limitIndex(index));
+  if(type === 'left'){
+    return node.removeClass('current enter up-level').addClass('leave')
+  }
+  return node.removeClass('current enter').addClass('leave up-level')
+}
+//状态机 Current
+function makeCurrent(index){
+  let node = $images.eq(limitIndex(index))
+  return node.removeClass('enter leave').addClass('current up-level')
+}
+//状态机 Next
+function makeNext(index,type){
+  let node = $images.eq(limitIndex(index));
+  if(type === 'left'){
+    return node.removeClass('leave current').addClass('enter up-level');
+  }
+  return node.removeClass('leave current up-level').addClass('enter');
 }
 
-//添加点击事件
-$buttons.on('click',function(){
-  let $this = $(this);
-  let index = $this.index();
-  let x = index*(-800);
-  $slierBox.css({'transform': 'translateX('+x+'px)'})
-  $buttons.eq(index).addClass('active')
-          .siblings('.active').removeClass('active'); 
-  n = index;
-})
-//在第一次执行前，给第一个button添加选中样式
-$buttons.eq(0).addClass('active');
-//开启自动播放
-autoSlide(2500);
-
-//鼠标进入，清除定时器，停止滚动
-$wrap.on('mouseenter',function(){
-  clearInterval(setTimer);
-})
-//鼠标离开，启动定时器，开启自动播放
-$wrap.on('mouseleave',function(){
-  autoSlide(2500);
-})
-
-
-
+//把所有状态设为Previous
+function makePreviousAll(index){
+  for(let i = 0;i < $images.length ; i++){
+    if(i !== limitIndex(index) || i !== limitIndex(index+1)){
+      makePrevious(i,'left')
+    }
+  }
+}
+//把所有状态设为Next
+function makeNextAll(index){
+  for(let i = 0;i < $images.length ; i++){
+    if(i !== limitIndex(index) || i !== limitIndex(index-1)){
+      makeNext(i)
+    }
+  }
+}
